@@ -1,9 +1,6 @@
 const express = require('express');
-
 const app = express();
-
 const mongoose = require('mongoose');
-
 
 const connectToMongo = require('./db');
 
@@ -20,3 +17,4 @@ app.use('/api/notes', require('./routes/notes'))
 app.get('/', (req, res)=>{
     res.send('Local Server Up And Running')
 })
+
