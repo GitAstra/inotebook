@@ -3,6 +3,7 @@ const router = express.Router();
 const User = require('../models/User');
 const {body, validationResult} = require('express-validator');
 const { json } = require('express');
+const fetchUser = require('../middleware/fetchUser');
 
 const bcrypt = require('bcryptjs');
 
@@ -17,7 +18,7 @@ const JWT_SECRET = 'A Long Random String';
 
 
 
-// Creating a User /api/auth
+//Route 1 - Creating a User /api/auth 
 router.post('/register', [
     body('email', 'Enter a valid email').isEmail(),
     body('name', 'Enter a valid name').isLength({min: 3}),
@@ -62,7 +63,7 @@ router.post('/register', [
 
 
 
-
+// Route 2 - User Login
 router.post('/login', [
     body('email', 'Enter a valid email').isEmail(),
     body('password', 'Password Must be atleast 5 chars').isLength({min: 5})
@@ -102,6 +103,22 @@ router.post('/login', [
     }
 
 })
+
+
+
+// Route 3 - Get LoggedIn User Details /api/auth/getuser
+
+router.post('/getuser', fetchUser, async(req, res)=>{
+        try{
+            userId = req.user.id;
+            const user = await User.findById(userId).select('-password');
+            res.send(user)
+        }
+        catch(error){ 
+            res.status(500).send("Some Error Occured")
+        }
+})
+
 
 
 module.exports = router;
