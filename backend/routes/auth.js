@@ -58,7 +58,48 @@ router.post('/register', [
     catch{
         res.status(500).send("Some Error Occured")
     }
+})
 
+
+
+
+router.post('/login', [
+    body('email', 'Enter a valid email').isEmail(),
+    body('password', 'Password Must be atleast 5 chars').isLength({min: 5})
+], async(req, res)=>{
+
+    const errors = validationResult(req);
+    if(!errors.isEmpty()){
+        return res.status(400).json({errors: errors.array()})
+    }
+
+
+    const {email, password} = req.body;
+
+
+    try{
+        let user = await User.findOne({email: email});
+        if(!user){
+            return res.status(400).json({error: "Check Your Email, Password"})
+        }
+        const passwordCompare = await bcrypt.compare(password, user.password)
+        if(!passwordCompare){
+            return res.status(400).json({error: "Check Your Email, Password"})
+        }
+
+        const data = {
+            user:{
+                id: user.id
+            }
+        }
+        const authToken = JWT.sign(data, JWT_SECRET);
+        res.json({authToken: authToken});
+
+
+    }   
+    catch(error){
+        res.status(500).send("Some Error Occured");
+    }
 
 })
 
