@@ -77,6 +77,8 @@ router.put('/updatenote/:id', fetchUser, async(req, res)=>{
 
 
 router.delete('/deletenote/:id', fetchUser, async(req, res)=>{
+   try{
+
    
     let note = await Note.findById(req.params.id);
     if(!note){
@@ -86,8 +88,11 @@ router.delete('/deletenote/:id', fetchUser, async(req, res)=>{
         return res.status(401).send('Not Allowed');
     }
     note = await Note.findByIdAndDelete(req.params.id)
-    res.json(note)
-    
+   res.json({success: `Note Deleted Successfully ${note.title}`})
+    }
+    catch{
+        res.status(500).send("Some Error Occured")
+    }
 })
 
 
