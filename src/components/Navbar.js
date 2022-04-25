@@ -9,7 +9,7 @@ export default function Navbar() {
       <div className="navbar">
             
             <div className="logo">
-                <h4>iNotebook</h4>
+                <h2>iNotebook</h2>
             </div>
             <ul className="nav">
                 <li><Link to="/" className={location.pathname === '/' ? 'active' : ''}>Home</Link></li>
